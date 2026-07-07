@@ -12,10 +12,25 @@ create table if not exists public.saju_results (
   user_id uuid not null references auth.users(id) on delete cascade,
   input_hash text not null,
   saju_result jsonb not null,
+  pillars_json jsonb not null default '{}'::jsonb,
+  five_elements_json jsonb not null default '{}'::jsonb,
+  ten_gods_json jsonb not null default '{}'::jsonb,
+  twelve_shinsal_json jsonb not null default '{}'::jsonb,
+  daewoon_json jsonb not null default '[]'::jsonb,
+  sewoon_json jsonb not null default '[]'::jsonb,
+  warnings_json jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (user_id, input_hash)
 );
+
+alter table public.saju_results add column if not exists pillars_json jsonb not null default '{}'::jsonb;
+alter table public.saju_results add column if not exists five_elements_json jsonb not null default '{}'::jsonb;
+alter table public.saju_results add column if not exists ten_gods_json jsonb not null default '{}'::jsonb;
+alter table public.saju_results add column if not exists twelve_shinsal_json jsonb not null default '{}'::jsonb;
+alter table public.saju_results add column if not exists daewoon_json jsonb not null default '[]'::jsonb;
+alter table public.saju_results add column if not exists sewoon_json jsonb not null default '[]'::jsonb;
+alter table public.saju_results add column if not exists warnings_json jsonb not null default '[]'::jsonb;
 
 create table if not exists public.reports (
   id uuid primary key default gen_random_uuid(),

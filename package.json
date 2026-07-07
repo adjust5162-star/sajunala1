@@ -11,7 +11,8 @@
     "smoke:hash": "node scripts/smoke-input-hash.mjs",
     "smoke:ai-summary": "node scripts/smoke-ai-summary.mjs",
     "smoke:payment": "node scripts/smoke-payment-prepare.mjs",
-    "smoke:health": "node scripts/smoke-health.mjs"
+    "smoke:health": "node scripts/smoke-health.mjs",
+    "smoke:saju-save": "node scripts/smoke-saju-save.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",

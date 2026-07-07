@@ -2,21 +2,51 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { SaveResultButton } from "../../components/SaveResultButton";
 import type { SajuResult } from "../../lib/saju/types";
 import { SajuResultView } from "../components/SajuResultView";
 
 const SAJU_RESULT_STORAGE_KEY = "saju:last-result";
 
+type StoredSajuResult =
+  | SajuResult
+  | {
+      data: SajuResult;
+      meta?: {
+        input_hash?: string;
+      };
+    };
+
+function parseStoredResult(value: string): { result: SajuResult; inputHash: string | null } | null {
+  const parsed = JSON.parse(value) as StoredSajuResult;
+
+  if ("data" in parsed) {
+    return {
+      result: parsed.data,
+      inputHash: parsed.meta?.input_hash ?? parsed.data.inputHash ?? null,
+    };
+  }
+
+  return {
+    result: parsed,
+    inputHash: parsed.inputHash ?? null,
+  };
+}
+
 export default function ResultPage() {
   const [result, setResult] = useState<SajuResult | null>(null);
+  const [inputHash, setInputHash] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem(SAJU_RESULT_STORAGE_KEY);
-      setResult(stored ? (JSON.parse(stored) as SajuResult) : null);
+      const parsed = stored ? parseStoredResult(stored) : null;
+      setResult(parsed?.result ?? null);
+      setInputHash(parsed?.inputHash ?? null);
     } catch {
       setResult(null);
+      setInputHash(null);
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +75,10 @@ export default function ResultPage() {
             결과를 불러오는 중입니다...
           </div>
         ) : result ? (
-          <SajuResultView result={result} />
+          <div className="space-y-5">
+            <SajuResultView result={result} />
+            <SaveResultButton inputHash={inputHash} result={result} hasResult />
+          </div>
         ) : (
           <div className="rounded-lg border border-[var(--line)] bg-white p-5">
             <h2 className="text-lg font-bold text-slate-900">아직 계산된 결과가 없습니다.</h2>

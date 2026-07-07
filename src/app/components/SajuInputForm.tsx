@@ -19,7 +19,7 @@ const calendarOptions = [
 ] as const;
 
 type ApiResponse =
-  | { ok: true; data: SajuResult }
+  | { ok: true; data: SajuResult; meta?: { input_hash?: string } }
   | { ok: false; error: string; message: string; issues?: unknown[] };
 
 type FormState = {
@@ -112,7 +112,15 @@ export function SajuInputForm() {
         return;
       }
 
-      sessionStorage.setItem(SAJU_RESULT_STORAGE_KEY, JSON.stringify(json.data));
+      sessionStorage.setItem(
+        SAJU_RESULT_STORAGE_KEY,
+        JSON.stringify({
+          data: json.data,
+          meta: {
+            input_hash: json.meta?.input_hash ?? json.data.inputHash,
+          },
+        }),
+      );
       router.push("/result");
     } catch {
       setSubmitError("잠시 후 다시 시도해 주세요.");

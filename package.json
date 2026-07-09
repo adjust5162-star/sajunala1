@@ -16,7 +16,8 @@
     "smoke:public-env": "node scripts/smoke-public-env.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.110.0",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.110.1",
     "@tailwindcss/postcss": "^4.1.11",
     "next": "^15.3.5",
     "react": "^19.0.0",

@@ -14,6 +14,7 @@ function getSupabaseUrlHost(value: string | undefined) {
 
 export function GET() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
@@ -21,7 +22,9 @@ export function GET() {
     ok: true,
     env: {
       NEXT_PUBLIC_SUPABASE_URL: Boolean(supabaseUrl),
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: Boolean(supabasePublishableKey),
       NEXT_PUBLIC_SUPABASE_ANON_KEY: Boolean(supabaseAnonKey),
+      SUPABASE_BROWSER_KEY_AVAILABLE: Boolean(supabasePublishableKey || supabaseAnonKey),
       NEXT_PUBLIC_SITE_URL: Boolean(siteUrl),
     },
     supabaseUrlHost: getSupabaseUrlHost(supabaseUrl),

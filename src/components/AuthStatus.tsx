@@ -1,21 +1,35 @@
 "use client";
 
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import type { SupabaseClient, User } from "@supabase/supabase-js";
 import type { AuthUiState } from "../lib/auth/types";
 import { createBrowserSupabaseClient } from "../lib/supabase/client";
 
 function getFriendlyAuthError(message?: string) {
-  if (!message) {
+  const normalized = message?.toLowerCase() ?? "";
+
+  if (!normalized) {
     return "요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.";
   }
 
-  if (message.toLowerCase().includes("invalid")) {
+  if (normalized.includes("email not confirmed") || normalized.includes("email_not_confirmed")) {
+    return "이메일 확인이 아직 완료되지 않았습니다. Supabase에서 테스트 사용자를 확인 처리하거나 이메일 확인을 완료해 주세요.";
+  }
+
+  if (normalized.includes("email provider") || normalized.includes("email_provider_disabled")) {
+    return "Supabase Email provider가 꺼져 있습니다. Authentication > Providers > Email에서 Email provider를 켜 주세요.";
+  }
+
+  if (normalized.includes("invalid")) {
     return "이메일 또는 비밀번호를 확인해 주세요.";
   }
 
-  return "로그인 요청을 처리하지 못했습니다. 입력값을 확인해 주세요.";
+  if (normalized.includes("password")) {
+    return "비밀번호 조건을 확인해 주세요. 테스트 비밀번호는 6자 이상으로 설정해 주세요.";
+  }
+
+  return "로그인 요청을 처리하지 못했습니다. 입력값과 Supabase Auth 설정을 확인해 주세요.";
 }
 
 export function AuthStatus() {

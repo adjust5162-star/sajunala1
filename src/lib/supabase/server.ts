@@ -28,7 +28,7 @@ export function createServerSupabaseClient(accessToken?: string): SupabaseClient
 
 export function createServiceRoleSupabaseClient() {
   const supabaseUrl = getSupabaseUrl();
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error("Missing server Supabase environment variables.");
